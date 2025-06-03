@@ -27,6 +27,13 @@ This example is particularly focused on the **.NET 9** version of ASP.NET Core.
 
 ### Features
 
+- Includes a pattern for overriding authentication handlers (e.g. `WebApplicationAuthenticationExperiment.Google.SubscriberGoogleAuthenticationHandler`)
+to use an injected `WebApplicationAuthenticationExperiment.Subscriber.ISubscriberAuthenticationHandler` implementation
+which could, for example, use the authenticating user's **external unique id** to determine (e.g. by checking a subscriber db table) if the user 
+ is a subscriber before considering the authentication successful.
+- Includes a base hub class `WebApplicationAuthenticationExperiment.Subscriber.SubscriberHub` that obtains the connecting user's **external unique
+identifier** which can be used, for example, to query a tenant DB then add the connection the signalr/websocket tenant group for sending messages just to 
+connected tenant users.
 - React Authenticator and Listener are both implemented as Typscript classes so they can be easily reused in other Typescript applications.
 - Implementation of React `useEffect` in `App.tsx` correctly deals with signed in and signed out state.
 - Shows how to configure Vite to proxy api requests to the back end without hardcoding endpoint urls by using an Aspire

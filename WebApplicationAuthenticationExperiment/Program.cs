@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authentication.Google;
 using WebApplicationAuthenticationExperiment.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using WebApplicationAuthenticationExperiment.Google;
+using WebApplicationAuthenticationExperiment.Subscriber;
 
 List<RefreshToken> refreshTokens = new List<RefreshToken>();
 
@@ -38,6 +40,8 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader();
     });
 });
+
+builder.Services.AddSingleton<ISubscriberAuthenticationHandler, SubscriberAuthenticationHandler>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -79,7 +83,7 @@ builder.Services.AddAuthentication(options =>
 })
 //AddGoogle doesn't work without adding cookies (or another valid signon scheme)
 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
-.AddGoogle(options =>
+.AddSubscriberGoogle(options =>
 {
     IConfigurationSection googleAuthNSection = config.GetSection("Authentication:Google");
     options.ClientId = clientId;
@@ -150,6 +154,7 @@ app.MapGet("/api/weatherforecast", (HttpContext httpContext) =>
 app.MapGet("/api/send", async ( string? path, IHubContext<RefreshHub> hubContext) =>
 {
     // example getting the hubcontext: it's available through di: var hubContext = context.RequestServices.GetRequiredService<IHubContext<ChatHub>>();
+    // see https://learn.microsoft.com/en-us/aspnet/core/signalr/hubcontext?view=aspnetcore-9.0#inject-an-instance-of-ihubcontext-in-a-controller
     if (!string.IsNullOrEmpty(path))
     {
         await hubContext.Clients.All.SendAsync("RefreshMessage", path);
