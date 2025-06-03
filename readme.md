@@ -33,7 +33,7 @@ which could, for example, use the authenticating user's **external unique id** t
  is a subscriber before considering the authentication successful.
 - Includes a base hub class `WebApplicationAuthenticationExperiment.Subscriber.SubscriberHub` that obtains the connecting user's **external unique
 id** which could be used, for example, to determine (e.g. by querying a tenant db) the user's tenant then add the connection to the signalr/websocket group for the tenant so
-messages can be sent to just connected tenant users (e.g. to update only the tenant's connected users' alarm display).
+messages can be sent to only a specific tenant's users (e.g. when a tenant alarm goes off, to inform only that tenant's users' connected UIs to update their alarm displays).
 - React Authenticator and Listener are both implemented as Typscript classes so they can be easily reused in other Typescript applications.
 - Implementation of React `useEffect` in `App.tsx` correctly deals with signed in and signed out state.
 - Shows how to configure Vite to proxy api requests to the back end without hardcoding endpoint urls by using an Aspire
